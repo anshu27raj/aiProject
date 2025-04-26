@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aerolounges</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <style>
+        body {
+            --bg-color: #f4f4f4;
+            --user-color: #007bff;
+            --bot-color: #e0f7da;
+            --text-color: #333;
+            --font: 'Inter', sans-serif;
+            font-family: var(--font);
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            background: url('https://cdn.pixabay.com/photo/2020/02/27/20/47/airplane-4885803_1280.jpg') no-repeat center center fixed;
+            background-size: cover;
+            scroll-behavior: smooth;
+        }
+
+        body.dark {
+            --bg-color: #121212;
+            --user-color: #2196F3;
+            --bot-color: #37474F;
+            --text-color: #fff;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: #333;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark .container {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+
+        input[type="text"],
+        select,
+        button {
+            font-size: 1rem;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        button {
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        #chatbox {
+            border: 1px solid #000;
+            padding: 1rem;
+            height: 400px;
+            overflow-y: auto;
+            background-color: #ebdddd;
+            border-radius: 8px;
+        }
+
+        body.dark #chatbox {
+            background-color: #1e1e1e;
+        }
+
+        .chat-entry {
+            display: flex;
+            margin: 10px 0;
+            align-items: flex-start;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .chat-entry.user {
+            flex-direction: row-reverse;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 0 10px;
+        }
+
+        .bubble {
+            padding: 10px 15px;
+            border-radius: 18px;
+            line-height: 1.4;
+            max-width: 75%;
+            word-wrap: break-word;
+            background-color: var(--bot-color);
+            color: var(--text-color);
+        }
+
+        .user .bubble {
+            background-color: var(--user-color);
+            color: white;
+        }
+
+        .typing-indicator {
+            display: inline-block;
+            position: relative;
+            width: 40px;
+            height: 20px;
+        }
+
+        .typing-indicator span {
+            background-color: #ccc;
+            border-radius: 50%;
+            display: inline-block;
+            height: 8px;
+            width: 8px;
+            margin: 0 2px;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #about,
+        #contact {
+            background: linear-gradient(to right, #83adb9, #668d96);
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+            margin-top: 40px;
+            border-radius: 12px;
+        }
+
+        #about h2,
+        #contact h2 {
+            margin-bottom: 15px;
+        }
+
+        .team {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .member {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            border-radius: 15px;
+            width: 200px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .member:hover {
+            transform: translateY(-5px);
+        }
+
+        .member img {
+            border-radius: 10%;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 90%;
+                padding: 15px;
+            }
+
+            input[type="text"] {
+                width: 100%;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .team {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .member {
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div>Aerolounges</div>
+        <div>
+            <a href="#chat">Chat</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+    <section id="chat" class="container">
+        <h2>AI-Powered Lounge Finder</h2>
+        <div class="controls">
+            <input type="text" id="userInput" placeholder="Ask me anything about lounges..." />
+            <button onclick="sendMessage()">Send</button>
+            <button onclick="startListening()">🎤 Speak</button>
+            <button onclick="clearChat()">Clear</button>
+            <button onclick="downloadChat()">Download</button>
+            <button onclick="getLocation()">📍 Detect My Location</button>
+
+            <select onchange="changeTheme(this.value)">
+                <option value="light">Light Theme</option>
+                <option value="dark">Dark Theme</option>
+            </select>
+        </div>
+        <label for="week">Select your Area:</label>
+        <select id="week">
+            <option value="">-- Choose Option --</option>
+            <option value="1">Domestic Terminal</option>
+            <option value="2">International Terminal</option>
+            <option value="3">VIP Lounge</option>
+        </select>
+        <div id="chatbox"></div>
+    </section>
+
+    <section id="about">
+        <h2>About the Lounge Finder</h2>
+        <p>This chatbot helps you discover airport lounges with AI-powered guidance. Personalized tips and lounge
+            recommendations at your fingertips!</p>
+        <div class="team">
+            <div class="member">
+                <img src="https://via.placeholder.com/100" alt="Team member 1">
+                <h3>Anshu</h3>
+            </div>
+            <div class="member">
+                <img src="https://via.placeholder.com/100" alt="Team member 2">
+                <h3>Rohit</h3>
+            </div>
+            <div class="member">
+                <img src="https://via.placeholder.com/100" alt="Team member 3">
+                <h3>Bhoomi</h3>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2>Contact Us</h2>
+        <p>Email us at <a href="mailto:your@email.com"
+                style="color: #fff; text-decoration: underline;">your@email.com</a></p>
+    </section>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        const apiKey = "AIzaSyA9smxkgYM1qfg_fiT9GKP47jmHG6wrMsM";
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+        const chatbox = document.getElementById('chatbox');
+        const input = document.getElementById('userInput');
+        let history = [];
+
+        // Define context and keywords for topic filtering
+        const CONTEXT = `You are an AI assistant specifically focused on helping users find and learn about airport lounges. 
+        You can only provide information about:
+        - Airport lounge locations
+        - Lounge access requirements
+        - Lounge amenities and services
+        - Lounge pricing and membership
+        - Airport terminal information
+        - VIP lounge services
+        If asked about anything else, politely redirect the conversation back to airport lounges.`;
+
+        const LOUNGE_KEYWORDS = [
+            'lounge', 'airport', 'terminal', 'vip', 'priority pass', 'amenities', 'access', 'membership',
+            'flight', 'passenger', 'travel', 'boarding', 'gate', 'airline', 'business class', 'first class',
+            'wifi', 'shower', 'food', 'beverage', 'seat', 'chair', 'rest', 'relax', 'waiting', 'departure', 'distance', 'domestic', 'international', 'vip', 'terminal'
+        ];
+
+        function isRelevantQuery(text) {
+            text = text.toLowerCase();
+            return LOUNGE_KEYWORDS.some(keyword => text.includes(keyword.toLowerCase()));
+        }
+
+        const avatars = {
+            user: "https://cdn-icons-png.flaticon.com/512/1946/1946429.png",
+            model: "https://cdn-icons-png.flaticon.com/512/4712/4712104.png"
+        };
+
+        function loadHistory() {
+            const saved = localStorage.getItem("chat_history");
+            if (saved) {
+                history = JSON.parse(saved);
+                history.forEach(msg => appendMessage(msg.role, msg.parts[0].text));
+            }
+        }
+
+        loadHistory();
+
+        function appendMessage(role, text) {
+            const div = document.createElement("div");
+            div.className = `chat-entry ${role} animate__animated animate__fadeInUp`;
+
+            const avatar = document.createElement("img");
+            avatar.className = "avatar";
+            avatar.src = avatars[role];
+
+            const bubble = document.createElement("div");
+            bubble.className = "bubble";
+
+            let i = 0;
+            const plainText = marked.parse(text).replace(/<[^>]*>/g, "");
+            const typeEffect = () => {
+                if (i < plainText.length) {
+                    bubble.innerHTML = plainText.substring(0, i + 1);
+                    i++;
+                    setTimeout(typeEffect, 10);
+                }
+            };
+            typeEffect();
+
+            div.appendChild(avatar);
+            div.appendChild(bubble);
+            chatbox.appendChild(div);
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const userText = input.value.trim();
+            if (!userText) return;
+
+            // Check if the query is relevant to airport lounges
+            // if (!isRelevantQuery(userText)) {
+            //     appendMessage("model", "I apologize, but I can only assist with questions related to airport lounges, their services, and access. Could you please ask something about airport lounges?");
+            //     return;
+            // }
+
+            appendMessage("user", userText);
+            
+            // Add the context to the conversation history
+            if (history.length === 0) {
+                history.push({ role: 'model', parts: [{ text: CONTEXT }] });
+            }
+            
+            history.push({ role: 'user', parts: [{ text: userText }] });
+            input.value = "";
+
+            const typingDiv = document.createElement("div");
+            typingDiv.className = "chat-entry model";
+            typingDiv.innerHTML = `<img class="avatar" src="${avatars.model}" /><div class="bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
+            chatbox.appendChild(typingDiv);
+            chatbox.scrollTop = chatbox.scrollHeight;
+
+            try {
+                const res = await fetch(endpoint, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        contents: [
+                            { role: 'model', parts: [{ text: CONTEXT }] },
+                            ...history
+                        ]
+                    })
+                });
+
+                chatbox.removeChild(typingDiv);
+
+                const data = await res.json();
+                const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "I apologize, but I can only provide information about airport lounges.";
+                appendMessage("model", reply);
+                speakText(reply);
+                history.push({ role: 'model', parts: [{ text: reply }] });
+                localStorage.setItem("chat_history", JSON.stringify(history));
+            } catch (error) {
+                chatbox.removeChild(typingDiv);
+                appendMessage("model", "I apologize, but I encountered an error. Please try again.");
+            }
+        }
+
+        function clearChat() {
+            localStorage.removeItem("chat_history");
+            chatbox.innerHTML = "";
+            history = [];
+        }
+
+        function downloadChat() {
+            if (!history.length) return;
+            let textContent = "Chat History\n\n";
+            history.forEach(msg => {
+                const sender = msg.role === 'user' ? "You" : "AI";
+                textContent += `${sender}: ${msg.parts[0].text}\n\n`;
+            });
+            const blob = new Blob([textContent], { type: "text/plain" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "chat_history.txt";
+            link.click();
+        }
+
+        function changeTheme(theme) {
+            document.body.className = theme;
+        }
+
+        function startListening() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-US';
+            recognition.start();
+
+            recognition.onresult = function (event) {
+                const transcript = event.results[0][0].transcript;
+                input.value = transcript;
+                sendMessage();
+            };
+
+            recognition.onerror = function (event) {
+                alert('Speech recognition error: ' + event.error);
+            };
+        }
+
+        function speakText(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            speechSynthesis.speak(utterance);
+        }
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(async (position) => {
+                    const { latitude, longitude } = position.coords;
+                    appendMessage("user", `My location is Latitude: ${latitude}, Longitude: ${longitude}`);
+                    history.push({ role: 'user', parts: [{ text: `My location is Latitude: ${latitude}, Longitude: ${longitude}` }] });
+
+
+
+                    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
+                    const data = await response.json();
+                    const city = data.address.city || data.address.town || data.address.village || "Unknown location";
+
+                    appendMessage("model", `You're currently in: ${city}. Let me find lounges nearby!`);
+                    history.push({ role: 'model', parts: [{ text: `You're currently in: ${city}. Let me find lounges nearby!` }] });
+                    localStorage.setItem("chat_history", JSON.stringify(history));
+                    speakText(`You're currently in ${city}. Let me find lounges nearby!`);
+                }, (error) => {
+                    alert("Error detecting location: " + error.message);
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+    </script>
+</body>
+
+</html>
